@@ -16,6 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from main.views import NotesView, NoteView
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', NotesView.as_view()),
+    url(r'^note/(?P<pk>[A-Z0-9]+)/', NoteView.as_view())
 ]

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+Template !
+
+<ul>
+{% for obj in object_list %}
+    <li> <a href="{{ obj.get_absolute_url }}">{{ obj }}</a></li>
+{% endfor %}
+</ul>
+</body>
+</html>
