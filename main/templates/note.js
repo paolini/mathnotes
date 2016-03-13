@@ -2,6 +2,13 @@
  * Created by paolini on 13/03/16.
  */
 
+MathJax.Hub.Config({
+    skipStartupTypeset: true,
+    tex2jax: {
+        inlineMath: [ ['$','$'], ['$$','$$'] ]
+    }
+});
+
 /* http://stackoverflow.com/questions/19333098/403-forbidden-error-when-making-an-ajax-post-request-in-django-framework */
 function getCookie(name) {
     var cookieValue = null;
@@ -59,6 +66,7 @@ function note_display(id) {
     html += "<br />";
     html += render(notes[id].text);
     $("#" + notes[id].div_id).html(html);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, notes[id].div_id]);
     $("#button_edit_" + id).click(function() {note_edit(id);});
     $("#button_save_" + id).click(function() {note_save(id);});
 }
@@ -94,7 +102,7 @@ function note_edit(id) {
     var html = "";
     html += "<button id='button_" + id + "'>done</button>";
     html += "<br />";
-    html += "<textarea id='edit_" + id + "'>" + notes[id].text + "</textarea>";
+    html += "<textarea id='edit_" + id + "' cols='80' rows='10'>" + notes[id].text + "</textarea>";
     $("#" + notes[id].div_id).html(html);
     $("#button_" + id).click(function() {note_change(id);});
 }
