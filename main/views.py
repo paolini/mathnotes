@@ -1,14 +1,23 @@
+from django.conf import settings
 from django.http.response import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
 
 from main.models import Note
 
-class NotesView(ListView):
+class MyContextMixin(object):
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(MyContextMixin, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['settings'] = settings
+        return context
+
+class NotesView(MyContextMixin, ListView):
     template_name = 'notes.html'
     model = Note
 
-class NoteView(DetailView):
+class NoteView(MyContextMixin, DetailView):
     template_name = 'note.html'
     model = Note
 

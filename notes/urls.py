@@ -21,7 +21,8 @@ from main.views import NotesView, NoteView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^js/note.js', TemplateView.as_view(template_name='note.js')),
+    url(r'^js/note.js', TemplateView.as_view(template_name='note.js', content_type='application/javascript')),
+    url(r'^css/bootstrap.css', TemplateView.as_view(template_name='bootstrap.css', content_type='text/css')),
     url(r'^$', NotesView.as_view()),
     url(r'^note/(?P<pk>[A-Z0-9]+)/', NoteView.as_view())
 ]
