@@ -2,6 +2,38 @@
  * Created by paolini on 13/03/16.
  */
 
+/* http://stackoverflow.com/questions/19333098/403-forbidden-error-when-making-an-ajax-post-request-in-django-framework */
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+// console.log("csrftoken: " + csrftoken);
+//Ajax call
+function csrfSafeMethod(method) {
+// these HTTP methods do not require CSRF protection
+return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    crossDomain: false, // obviates need for sameOrigin test
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
 var replace_bits = {
     "&": "&amp;",
     "<": "&lt;",
@@ -11,7 +43,7 @@ var replace_bits = {
     "/": '&#x2F;'
 };
 
-notes = {};
+notes = {}; // id -> {div_id: ..., text: ..., initial: ...}
 
 function render(str) {
     str = String(str).replace(/[&<>"'\/]/g, function (s) {return replace_bits[s];});
@@ -26,22 +58,44 @@ function note_display(id) {
     }
     html += "<br />";
     html += render(notes[id].text);
-    $("#" + id).html(html);
+    $("#" + notes[id].div_id).html(html);
     $("#button_edit_" + id).click(function() {note_edit(id);});
     $("#button_save_" + id).click(function() {note_save(id);});
 }
 
-function note_init(id, text) {
-    notes[id] = {text: text, initial: text};
+function ajax_error(jqXHR, textStatus, errorThrown) {
+    alert(textStatus + " " + errorThrown);
+}
+
+function note_url(id) {
+    return "/note/" + id + "/";
+}
+
+function note_reset(id, text) {
+    notes[id].text = text;
+    notes[id].initial = text;
     note_display(id);
 }
 
-function div_init() {
-    note_init($(this).attr("id"), $(this).attr("initial"));
+function note_init(id, div_id) {
+    $.ajax(note_url(id), {
+        method: "GET",
+        accepts: "appolication/json",
+        error: ajax_error,
+        data: {'json': 1},
+        success: function(data) {
+            notes[id] = {div_id: div_id};
+            note_reset(id, data.text);
+        }
+    });
 }
 
 function note_edit(id) {
-    $("#" + id).html("<button id='button_" + id + "'>done</button><br /><textarea id='edit_" + id + "'>" + notes[id].text + "</textarea>");
+    var html = "";
+    html += "<button id='button_" + id + "'>done</button>";
+    html += "<br />";
+    html += "<textarea id='edit_" + id + "'>" + notes[id].text + "</textarea>";
+    $("#" + notes[id].div_id).html(html);
     $("#button_" + id).click(function() {note_change(id);});
 }
 
@@ -51,20 +105,21 @@ function note_change(id) {
 }
 
 function note_save(id) {
-    var options = {
+    $.ajax(note_url(id), {
         method: "POST",
         data: {
             id: id,
             text: notes[id].text
         },
         success: function(data) {
-            note_init(id, data.text);
+            note_reset(id, data.text);
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-            alert(textStatus + " " + errorThrown);
-        }
-    };
-    $.ajax("", options);
+        error: ajax_error
+    });
+}
+
+function div_init() {
+    note_init($(this).attr("pk"), $(this).attr("id"));
 }
 
 $(function() {

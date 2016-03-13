@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Note</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="/js/note.js"></script>
-</head>
-<body>
-Note:
-<div id="main_note" class="note" initial="{{ note.text|escapejs }}">
-</div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Note</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <script src="/js/note.js"></script>
+    </head>
+    <body>
+        <div id="div_{{ note.pk }}" class="note" pk="{{ note.pk }}">
+        </div>
+    </body>
 </html>
