@@ -11,21 +11,26 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from config import config
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG = config
 
+BASE_DIR = config.get('config', 'base_dir')
+assert BASE_DIR == os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '82dem$ft44bu!t%uv6ovif4dx93)ek!upg^%$h81p0i$ybi1fi'
+SECRET_KEY = config.get('config', 'secret_key')
+assert SECRET_KEY == 'afdjdkierncmddkfkeoaoafjruyyqnsdpofkmsdmsjennnffnd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config.getboolean('preferences', 'debug')
+assert DEBUG == True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config.getlist('config', 'allowed_hosts')
+assert ALLOWED_HOSTS == []
 
 
 # Application definition
@@ -78,11 +83,13 @@ WSGI_APPLICATION = 'notes.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config.get('database', 'engine'),
+        'NAME': config.get('database', 'name'),
     }
 }
 
+assert DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
+assert DATABASES['default']['NAME'] == os.path.join(BASE_DIR, 'db.sqlite3')
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -106,9 +113,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = config.get('preferences', 'language')
+assert LANGUAGE_CODE == 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = config.get('preferences', 'timezone')
+assert TIME_ZONE == 'Europe/Rome'
 
 USE_I18N = True
 
@@ -117,7 +126,8 @@ USE_L10N = True
 USE_TZ = True
 
 
-BASE_URL = '/'
+BASE_URL = config.get('config', 'base_url')
+assert BASE_URL == '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
