@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^$', NotesView.as_view()),
     url(r'^note/(?P<pk>[A-Z0-9]+)/', NoteView.as_view()),
     url('', include('social.apps.django_app.urls', namespace='social')),
+    url('^', include('django.contrib.auth.urls', namespace='auth')),
 ]

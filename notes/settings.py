@@ -151,3 +151,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config.get('social', 'google_oauth2_secret')
 
 SOCIAL_AUTH_TWITTER_KEY = config.get('social', 'twitter_key')
 SOCIAL_AUTH_TWITTER_SECRET = config.get('social', 'twitter_secret')
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = BASE_URL
+SOCIAL_AUTH_LOGIN_URL = BASE_URL
