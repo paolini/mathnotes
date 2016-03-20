@@ -76,7 +76,7 @@ function ajax_error(jqXHR, textStatus, errorThrown) {
 }
 
 function note_url(id) {
-    return "/note/" + id + "/";
+    return "{{ settings.BASE_URL }}note/" + id + "/";
 }
 
 function note_reset(id, text) {

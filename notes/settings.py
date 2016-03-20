@@ -16,21 +16,17 @@ from config import config
 CONFIG = config
 
 BASE_DIR = config.get('config', 'base_dir')
-assert BASE_DIR == os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.get('config', 'secret_key')
-assert SECRET_KEY == 'afdjdkierncmddkfkeoaoafjruyyqnsdpofkmsdmsjennnffnd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.getboolean('preferences', 'debug')
-assert DEBUG == True
 
 ALLOWED_HOSTS = config.getlist('config', 'allowed_hosts')
-assert ALLOWED_HOSTS == []
 
 
 # Application definition
@@ -83,13 +79,13 @@ WSGI_APPLICATION = 'notes.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': config.get('database', 'engine'),
+        'ENGINE': 'django.db.backends.' + config.get('database', 'engine').replace('.','_'),
         'NAME': config.get('database', 'name'),
+        'PASSWORD': config.get('database', 'password') or None,
+        'HOST': config.get('database', 'host') or None,
+        'PORT': config.get('database', 'port') or None,
     }
 }
-
-assert DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
-assert DATABASES['default']['NAME'] == os.path.join(BASE_DIR, 'db.sqlite3')
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -114,10 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
 LANGUAGE_CODE = config.get('preferences', 'language')
-assert LANGUAGE_CODE == 'en-us'
 
 TIME_ZONE = config.get('preferences', 'timezone')
-assert TIME_ZONE == 'Europe/Rome'
 
 USE_I18N = True
 
@@ -127,9 +121,9 @@ USE_TZ = True
 
 
 BASE_URL = config.get('config', 'base_url')
-assert BASE_URL == '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = BASE_URL + 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')

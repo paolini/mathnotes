@@ -43,7 +43,7 @@ config.set('database', 'user', USERNAME)
 config.set('database', 'password', '')
 config.set('database', 'host', '')
 config.set('database', 'port', '')
-config.set('database', 'engine', 'django.db.backends.sqlite3')  # 'postgresql_psycopg2'
+config.set('database', 'engine', 'sqlite3')  # 'postgresql_psycopg2'
 
 # [apache] section: apache configuration
 config.add_section('apache')
@@ -65,6 +65,8 @@ config.set('preferences', 'site_id', '1')
 CONFIG_FILENAMES = [x for x in [
     os.environ.get('NOTES_CONFIG'),
     os.path.join(BASE_ROOT, 'config.ini'),
+    os.path.join(os.path.dirname(BASE_ROOT), 'config.ini'),
+    os.path.join(os.path.dirname(BASE_ROOT), 'notes.ini'),
     os.path.join(BASE_ROOT, 'notes.ini'),
     os.path.expanduser('~/.notes.ini'), ] if x]
 for CONFIG_FILENAME in CONFIG_FILENAMES:

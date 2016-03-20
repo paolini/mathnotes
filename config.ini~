@@ -1,0 +1,4 @@
+[database]
+engine = postgresql_psycopg2
+name = notes
+user = paolini

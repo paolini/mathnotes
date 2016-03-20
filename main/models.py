@@ -5,6 +5,7 @@ from os import urandom
 
 from django.db.models import Model
 from django.db.models.fields import TextField, CharField, DateTimeField
+from django.conf import settings
 
 
 class Note(Model):
@@ -17,7 +18,7 @@ class Note(Model):
         return '{:.40}'.format(self.text.replace('\n', ' '))
 
     def get_absolute_url(self):
-        return '/note/{}/'.format(self.id)
+        return '{}note/{}/'.format(settings.BASE_URL, self.id)
 
     def save(self, *args, **kwargs):
         if not self.id:
