@@ -62,6 +62,14 @@ config.set('preferences', 'timezone', 'Europe/Rome')
 config.set('preferences', 'language', 'en-us')
 config.set('preferences', 'site_id', '1')
 
+config.add_section('social')
+config.set('social', 'facebook_key', '')
+config.set('social', 'facebook_secret', '')
+config.set('social', 'google_oauth2_key', '')
+config.set('social', 'google_oauth2_secret', '')
+config.set('social', 'twitter_key', '')
+config.set('social', 'twitter_secret', '')
+
 CONFIG_FILENAMES = [x for x in [
     os.environ.get('NOTES_CONFIG'),
     os.path.join(BASE_ROOT, 'config.ini'),

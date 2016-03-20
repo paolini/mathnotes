@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'social.apps.django_app.default',
+
     'main',
 ]
 
@@ -66,6 +68,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
             ],
         },
     },
@@ -127,3 +131,23 @@ BASE_URL = config.get('config', 'base_url')
 
 STATIC_URL = BASE_URL + 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.FacebookOAuth2',
+    'social.backends.open_id.OpenIdAuth',
+    'social.backends.google.GoogleOpenId',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.google.GoogleOAuth',
+    'social.backends.twitter.TwitterOAuth',
+    'social.backends.yahoo.YahooOpenId',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_FACEBOOK_KEY = config.get('social', 'facebook_key')
+SOCIAL_AUTH_FACEBOOK_SECRET = config.get('social', 'facebook_secret')
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config.get('social', 'google_oauth2_key')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config.get('social', 'google_oauth2_secret')
+
+SOCIAL_AUTH_TWITTER_KEY = config.get('social', 'twitter_key')
+SOCIAL_AUTH_TWITTER_SECRET = config.get('social', 'twitter_secret')
