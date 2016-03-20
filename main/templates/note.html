@@ -7,6 +7,12 @@
 {% endblock %}
 
 {% block content %}
-        <div id="div_{{ note.pk }}" class="note" pk="{{ note.pk }}">
-        </div>
+    <a href="{% url "note_list" %}">back to list</a>
+    <div id="div_{{ note.pk }}" class="note" pk="{{ note.pk }}">
+    </div>
+    <p>
+    {% if note.author %}
+    author: {{ note.author }}
+    {% endif %}
+    </p>
 {% endblock %}

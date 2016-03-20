@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
+    <form method="POST">{% csrf_token %}
+    <input type="submit" name="new" value="create new">
+    </form>
 <ul>
 {% for obj in object_list %}
-    <li> <a href="{{ obj.get_absolute_url }}">{{ obj.created_on|date:"d.m.y" }}: {{ obj }}</a></li>
+    <li>
+        <a href="{{ obj.get_absolute_url }}">{{ obj.created_on|date:"d.m.y" }}: {{ obj }}</a>
+        {% if obj.author %}(by {{ obj.author }}){% endif %}
+    </li>
 {% endfor %}
 </ul>
 {% endblock %}
