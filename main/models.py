@@ -5,14 +5,14 @@ from os import urandom
 
 from django.contrib.auth.models import User
 from django.db.models import Model
-from django.db.models.fields import TextField, CharField, DateTimeField
+from django.db.models.fields import TextField, CharField, DateTimeField, IntegerField
 from django.db.models.fields.related import ForeignKey
 
 from django.conf import settings
 
 
 class Note(Model):
-    hash = CharField(max_length=16, primary_key=True)
+    hash = CharField(max_length=16)
     text = TextField()
     created_on = DateTimeField(auto_now_add=True)
     modified_on = DateTimeField(auto_now=True)
