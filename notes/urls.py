@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^js/note.js', TemplateView.as_view(template_name='note.js', content_type='application/javascript')),
     url(r'^css/bootstrap.css', TemplateView.as_view(template_name='bootstrap.css', content_type='text/css')),
     url(r'^$', NotesView.as_view(), name='note_list'),
-    url(r'^note/(?P<pk>[A-Z0-9]+)/', NoteView.as_view()),
+    url(r'^note/(?P<hash>[A-Z0-9]+)/', NoteView.as_view()),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('^', include('django.contrib.auth.urls', namespace='auth')),
 ]

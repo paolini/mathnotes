@@ -8,7 +8,7 @@
 
 {% block content %}
     <a href="{% url "note_list" %}">back to list</a>
-    <div id="div_{{ note.pk }}" class="note" pk="{{ note.pk }}">
+    <div id="div_{{ note.hash }}" class="note" hash="{{ note.hash }}">
     </div>
     <p>
     {% if note.author %}

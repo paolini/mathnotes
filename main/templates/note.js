@@ -50,84 +50,84 @@ var replace_bits = {
     "/": '&#x2F;'
 };
 
-notes = {}; // id -> {div_id: ..., text: ..., initial: ...}
+notes = {}; // hash -> {div_id: ..., text: ..., initial: ...}
 
 function render(str) {
     str = String(str).replace(/[&<>"'\/]/g, function (s) {return replace_bits[s];});
     return "<p>" + str + "</p>";
 }
 
-function note_display(id) {
+function note_display(hash) {
     var html = "";
-    html += "<button id='button_edit_" + id +"'>edit</button>";
-    if (notes[id].text != notes[id].initial) {
-        html += "<button id='button_save_" + id + "'>save</button>";
+    html += "<button id='button_edit_" + hash +"'>edit</button>";
+    if (notes[hash].text != notes[hash].initial) {
+        html += "<button id='button_save_" + hash + "'>save</button>";
     }
     html += "<br />";
-    html += render(notes[id].text);
-    $("#" + notes[id].div_id).html(html);
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, notes[id].div_id]);
-    $("#button_edit_" + id).click(function() {note_edit(id);});
-    $("#button_save_" + id).click(function() {note_save(id);});
+    html += render(notes[hash].text);
+    $("#" + notes[hash].div_id).html(html);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, notes[hash].div_id]);
+    $("#button_edit_" + hash).click(function() {note_edit(hash);});
+    $("#button_save_" + hash).click(function() {note_save(hash);});
 }
 
 function ajax_error(jqXHR, textStatus, errorThrown) {
     alert(textStatus + " " + errorThrown);
 }
 
-function note_url(id) {
-    return "{{ settings.BASE_URL }}note/" + id + "/";
+function note_url(hash) {
+    return "{{ settings.BASE_URL }}note/" + hash + "/";
 }
 
-function note_reset(id, text) {
-    notes[id].text = text;
-    notes[id].initial = text;
-    note_display(id);
+function note_reset(hash, text) {
+    notes[hash].text = text;
+    notes[hash].initial = text;
+    note_display(hash);
 }
 
-function note_init(id, div_id) {
-    $.ajax(note_url(id), {
+function note_init(hash, div_id) {
+    $.ajax(note_url(hash), {
         method: "GET",
         accepts: "appolication/json",
         error: ajax_error,
         data: {'json': 1},
         success: function(data) {
-            notes[id] = {div_id: div_id};
-            note_reset(id, data.text);
+            notes[hash] = {div_id: div_id};
+            note_reset(hash, data.text);
         }
     });
 }
 
-function note_edit(id) {
+function note_edit(hash) {
     var html = "";
-    html += "<button id='button_" + id + "'>done</button>";
+    html += "<button id='button_" + hash + "'>done</button>";
     html += "<br />";
-    html += "<textarea id='edit_" + id + "' cols='80' rows='10'>" + notes[id].text + "</textarea>";
-    $("#" + notes[id].div_id).html(html);
-    $("#button_" + id).click(function() {note_change(id);});
+    html += "<textarea id='edit_" + hash + "' cols='80' rows='10'>" + notes[hash].text + "</textarea>";
+    $("#" + notes[hash].div_id).html(html);
+    $("#button_" + hash).click(function() {note_change(hash);});
 }
 
-function note_change(id) {
-    notes[id].text = $("#edit_" + id).val();
-    note_display(id);
+function note_change(hash) {
+    notes[hash].text = $("#edit_" + hash).val();
+    note_display(hash);
 }
 
-function note_save(id) {
-    $.ajax(note_url(id), {
+function note_save(hash) {
+    $.ajax(note_url(hash), {
         method: "POST",
         data: {
-            id: id,
-            text: notes[id].text
+            hash: hash,
+            text: notes[hash].text
         },
         success: function(data) {
-            note_reset(id, data.text);
+            note_reset(hash, data.text);
         },
         error: ajax_error
     });
 }
 
 function div_init() {
-    note_init($(this).attr("pk"), $(this).attr("id"));
+    note_init($(this).attr("hash"), $(this).attr("id"));
 }
 
 $(function() {

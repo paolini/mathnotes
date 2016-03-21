@@ -12,7 +12,7 @@ from django.conf import settings
 
 
 class Note(Model):
-    id = CharField(max_length=16, primary_key=True)
+    hash = CharField(max_length=16, primary_key=True)
     text = TextField()
     created_on = DateTimeField(auto_now_add=True)
     modified_on = DateTimeField(auto_now=True)
@@ -22,9 +22,9 @@ class Note(Model):
         return '{:.40}'.format(self.text.replace('\n', ' '))
 
     def get_absolute_url(self):
-        return '{}note/{}/'.format(settings.BASE_URL, self.id)
+        return '{}note/{}/'.format(settings.BASE_URL, self.hash)
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.id = b32encode(urandom(10))
+        if not self.hash:
+            self.hash = b32encode(urandom(10))
         return super(Note, self).save(*args, **kwargs)
