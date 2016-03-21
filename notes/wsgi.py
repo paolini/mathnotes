@@ -4,7 +4,7 @@ import site
 
 from os.path import expanduser
 
-PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VIRTUALENV_PATH = os.path.join(expanduser('~'), '.virtualenvs', 'notes')
 
 # vedi http://thecodeship.com/deployment/deploy-django-apache-virtualenv-and-mod_wsgi/
