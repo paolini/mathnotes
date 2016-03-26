@@ -15,8 +15,8 @@
     {% endif %}
 {% endif %}
 
-       <a href="{% url 'social:begin' 'facebook' %}?next={{ next }}">login with Facebook</a>
-       <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}">Login with Google</a>
+       <a href="{% url 'social:begin' 'facebook' %}?next={{ next }}">Facebook login</a> | 
+       <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}">Google login</a>
 {% comment %}
        <a href="{% url 'social:begin' 'twitter' %}?next={{ next }}">Login with Twitter</a>
 {% endcomment %}
