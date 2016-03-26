@@ -10,7 +10,7 @@ DEPLOY_VIRTUALENV=$(awk -F "=" '/deploy_virtualenv/ {print $2}' config.ini)
 
 echo ==== activate virtualenv ${DEPLOY_VIRTUALENV}
 
-. DEPLOY_VIRTUALENV/bin/activate
+. ${DEPLOY_VIRTUALENV}/bin/activate
 
 echo ==== update source code
 git pull
