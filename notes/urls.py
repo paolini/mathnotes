@@ -22,7 +22,9 @@ from main.views import NotesView, NoteView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^js/note.js', TemplateView.as_view(template_name='note.js', content_type='application/javascript')),
+    url(r'^js/facebook.js', TemplateView.as_view(template_name='facebook.js', content_type='application/javascript')),
     url(r'^css/bootstrap.css', TemplateView.as_view(template_name='bootstrap.css', content_type='text/css')),
+    url(r'^css/main.css', TemplateView.as_view(template_name='main.css', content_type='text/css')),
     url(r'^$', NotesView.as_view(), name='note_list'),
     url(r'^note/(?P<hash>[A-Z0-9]+)/', NoteView.as_view()),
     url('', include('social.apps.django_app.urls', namespace='social')),

@@ -1,0 +1,9 @@
+.header, .content {
+    padding-left: 1em;
+    padding-right: 1em;
+    max-width: 60em;
+}
+
+.header {
+    background: #e0e0e0;
+}
