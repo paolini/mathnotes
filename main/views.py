@@ -34,7 +34,7 @@ class NoteView(MyContextMixin, TemplateResponseMixin, View):
 
     def get_object(self):
         hash = self.kwargs['hash']
-        self.object = Note.objects.get(hash=hash)
+        self.object = Note.objects.get_with_hash(hash)
 
     def get_context_data(self, **kwargs):
         """
