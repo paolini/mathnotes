@@ -5,7 +5,7 @@
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script src="{{ settings.BASE_URL }}js/note.js"></script>
     <script>
-    var username = {% if request.user.id %}"{{ request.user.username|escapejs }}"{% else %}null{% endif %};
+    var user_id = {% if request.user.id %}{{ request.user.id|escapejs }}{% else %}0{% endif %};
     </script>
 {% endblock %}
 
