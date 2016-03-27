@@ -24,7 +24,7 @@ class NotesView(MyContextMixin, ListView):
             if request.user.id:
                 note.author = request.user
             note.save()
-            return HttpResponseRedirect(note.get_absolute_url())
+            return HttpResponseRedirect(note.get_absolute_url()+'?edit')
         else:
             return HttpResponseBadRequest()
 

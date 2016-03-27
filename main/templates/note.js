@@ -79,13 +79,15 @@ function note_url(hash) {
     return "{{ settings.BASE_URL }}note/" + hash + "/";
 }
 
-function note_reset(hash, text) {
+function note_reset(hash, text, edit) {
     notes[hash].text = text;
     notes[hash].initial = text;
     note_display(hash);
+    if (edit)
+        note_edit(hash);
 }
 
-function note_init(hash, div_id) {
+function note_init(hash, div_id, edit) {
     $.ajax(note_url(hash), {
         method: "GET",
         accepts: "appolication/json",
@@ -93,7 +95,7 @@ function note_init(hash, div_id) {
         data: {'json': 1},
         success: function(data) {
             notes[hash] = {div_id: div_id};
-            note_reset(hash, data.text);
+            note_reset(hash, data.text, edit);
         }
     });
 }
@@ -105,6 +107,7 @@ function note_edit(hash) {
     html += "<textarea id='edit_" + hash + "' cols='80' rows='10'>" + notes[hash].text + "</textarea>";
     $("#" + notes[hash].div_id).html(html);
     $("#button_" + hash).click(function() {note_change(hash);});
+    $("#edit_" + hash).focus();
 }
 
 function note_change(hash) {
@@ -126,8 +129,14 @@ function note_save(hash) {
     });
 }
 
+function getURLParameter(name) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+}
+
 function div_init() {
-    note_init($(this).attr("hash"), $(this).attr("id"));
+    var edit = !!getURLParameter("edit");
+    var hash =$(this).attr("hash")
+    note_init(hash, $(this).attr("id"), edit);
 }
 
 $(function() {

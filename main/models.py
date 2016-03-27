@@ -28,15 +28,21 @@ class Note(Model):
 
     objects = NoteManager()
 
+    def __init__(self, *args, **kwargs):
+        super(Note, self).__init__(*args, **kwargs)
+        if not self.hash:
+            self.hash = self.new_hash()
+
     def __unicode__(self):
         return '{:.40}'.format(self.text.replace('\n', ' '))
 
     def get_absolute_url(self):
         return '{}note/{}/'.format(settings.BASE_URL, self.hash)
 
+    @classmethod
+    def new_hash(cls):
+        return urandom(6).encode('base-64')[:8].replace('/', '_').replace('+', '-')
+
     def save(self, *args, **kwargs):
-        if not self.hash:
-            self.hash = urandom(6).encode('base-64')[:8].replace('/', '_').replace('+', '-')
-#            self.hash = b64encode(bytes(urandom(6)), altchars='_-')
         return super(Note, self).save(*args, **kwargs)
 
