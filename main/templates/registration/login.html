@@ -1,23 +1,16 @@
 {% extends "base.html" %}
 
+{% block header %}{% endblock %}
 {% block content %}
 
+    <div class="login_panel">
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
-    {% endif %}
-{% endif %}
-
-       <a href="{% url 'social:begin' 'facebook' %}?next={{ next }}">Facebook login</a> | 
-       <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}">Google login</a>
 {% comment %}
+       <a href="{% url 'social:begin' 'facebook' %}?next={{ next }}">Facebook login</a> |
+       <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}">Google login</a>
        <a href="{% url 'social:begin' 'twitter' %}?next={{ next }}">Login with Twitter</a>
 {% endcomment %}
 
@@ -42,4 +35,5 @@
 {# Assumes you setup the password_reset view in your URLconf #}
 <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 {% endcomment %}
+    </div>
 {% endblock %}

@@ -67,7 +67,8 @@ function note_url(hash) {
 
 function note_display(hash) {
     var html = "";
-    if (notes[hash].author == username) {
+    author = notes[hash].author;
+    if (!author || author == username) {
         html += "<button id='button_edit_" + hash + "'>edit</button>";
     }
     if (notes[hash].text != notes[hash].initial) {

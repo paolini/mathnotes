@@ -126,6 +126,7 @@ USE_TZ = True
 
 
 BASE_URL = config.get('config', 'base_url')
+LOGIN_REDIRECT_URL = BASE_URL
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -155,3 +156,4 @@ SOCIAL_AUTH_TWITTER_SECRET = config.get('social', 'twitter_secret')
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = BASE_URL
 SOCIAL_AUTH_LOGIN_URL = BASE_URL
+
