@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-from base64 import b64encode
 from os import urandom
 
 from django.contrib.auth.models import User
@@ -37,6 +36,7 @@ class Note(Model):
 
     def save(self, *args, **kwargs):
         if not self.hash:
-            self.hash = b64encode(urandom(6), altchars='_-')
+            self.hash = urandom(6).encode('base-64')[:8].replace('/', '_').replace('+', '-')
+#            self.hash = b64encode(bytes(urandom(6)), altchars='_-')
         return super(Note, self).save(*args, **kwargs)
 
