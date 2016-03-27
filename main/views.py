@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http.response import JsonResponse, HttpResponseBadRequest, HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, TemplateView, View
+from django.views.generic import ListView, View
 from django.views.generic.base import TemplateResponseMixin
+from django.utils.translation import ugettext as _
 
 from main.models import Note
 
@@ -60,9 +61,21 @@ class NoteView(MyContextMixin, TemplateResponseMixin, View):
     def post(self, request, *args, **kwargs):
         self.get_object()
         note = self.object
+        if request.POST.get('clone'):
+            note.clone()
+            note.author = None
+            if request.user.id:
+                note.author = request.user
+            note.save()
+            return HttpResponseRedirect(note.get_absolute_url())
+        if request.POST.get('delete'):
+            if note.author and note.author != request.user:
+                return HttpResponseForbidden(_(u"solo l'autore può cancellare la nota"))
+            note.delete()
+            return HttpResponseRedirect(reverse("note_list"))
         try:
             if note.author and note.author != request.user:
-                return HttpResponseForbidden(u"solo l'autore può modificare la nota")
+                return HttpResponseForbidden(_(u"solo l'autore può modificare la nota"))
             note.text = request.POST['text']
             note.save()
             return JsonResponse({'text': note.text})

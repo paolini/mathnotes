@@ -46,3 +46,6 @@ class Note(Model):
     def save(self, *args, **kwargs):
         return super(Note, self).save(*args, **kwargs)
 
+    def clone(self):
+        self.id = None
+        self.hash = self.new_hash()

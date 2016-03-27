@@ -57,9 +57,19 @@ function render(str) {
     return "<p>" + str + "</p>";
 }
 
+function ajax_error(jqXHR, textStatus, errorThrown) {
+    alert(textStatus + " " + errorThrown);
+}
+
+function note_url(hash) {
+    return "{{ settings.BASE_URL }}note/" + hash + "/";
+}
+
 function note_display(hash) {
     var html = "";
-    html += "<button id='button_edit_" + hash +"'>edit</button>";
+    if (notes[hash].author == username) {
+        html += "<button id='button_edit_" + hash + "'>edit</button>";
+    }
     if (notes[hash].text != notes[hash].initial) {
         html += "<button id='button_save_" + hash + "'>save</button>";
     }
@@ -69,33 +79,28 @@ function note_display(hash) {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, notes[hash].div_id]);
     $("#button_edit_" + hash).click(function() {note_edit(hash);});
     $("#button_save_" + hash).click(function() {note_save(hash);});
+    $("#button_clone_" + hash).click(function() {note_clone(hash);});
 }
 
-function ajax_error(jqXHR, textStatus, errorThrown) {
-    alert(textStatus + " " + errorThrown);
-}
-
-function note_url(hash) {
-    return "{{ settings.BASE_URL }}note/" + hash + "/";
-}
-
-function note_reset(hash, text, edit) {
-    notes[hash].text = text;
-    notes[hash].initial = text;
+function note_reset(hash, data) {
+    notes[hash].text = data.text;
+    notes[hash].initial = data.text;
+    notes[hash].author = data.author;
     note_display(hash);
-    if (edit)
-        note_edit(hash);
 }
 
-function note_init(hash, div_id, edit) {
+function note_init(hash, div_id) {
     $.ajax(note_url(hash), {
         method: "GET",
         accepts: "appolication/json",
         error: ajax_error,
         data: {'json': 1},
         success: function(data) {
+            var edit = !!getURLParameter("edit");
             notes[hash] = {div_id: div_id};
-            note_reset(hash, data.text, edit);
+            note_reset(hash, data);
+            if (edit)
+                note_edit(hash);
         }
     });
 }
@@ -123,7 +128,7 @@ function note_save(hash) {
             text: notes[hash].text
         },
         success: function(data) {
-            note_reset(hash, data.text);
+            note_reset(hash, data);
         },
         error: ajax_error
     });
@@ -134,9 +139,8 @@ function getURLParameter(name) {
 }
 
 function div_init() {
-    var edit = !!getURLParameter("edit");
     var hash =$(this).attr("hash")
-    note_init(hash, $(this).attr("id"), edit);
+    note_init(hash, $(this).attr("id"));
 }
 
 $(function() {

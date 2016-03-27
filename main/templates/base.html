@@ -14,7 +14,7 @@
    {% if user and not user.is_anonymous %}
    {{ user.get_full_name|default:user.username }}
    |
-   <a href="{% url 'auth:logout' %}">logout</a>
+   <a href="{% url 'auth:logout' %}?next=request.url">logout</a>
    {% else %}
    <a href="{% url 'auth:login' %}">login</a>
    {% endif %}

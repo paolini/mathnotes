@@ -4,10 +4,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script src="{{ settings.BASE_URL }}js/note.js"></script>
+    <script>
+    var username = {% if request.user.id %}"{{ request.user.username|escapejs }}"{% else %}null{% endif %};
+    </script>
 {% endblock %}
 
 {% block content %}
     <a href="{% url "note_list" %}">back to list</a>
+    <form id="form_{{ note.hash }}" method="POST">{% csrf_token %}
+        <input type="submit" name="clone" value="clone">
+    {% if not note.author or note.author == request.user %}
+        <input type="submit" name="delete" value="delete">
+    {% endif %}
+    </form>
     <div id="div_{{ note.hash }}" class="note" hash="{{ note.hash }}">
     </div>
     <p>
