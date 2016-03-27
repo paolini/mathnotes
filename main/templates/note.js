@@ -65,16 +65,22 @@ function note_url(hash) {
     return "{{ settings.BASE_URL }}note/" + hash + "/";
 }
 
+function note_is_modified(hash) {
+    var obj = notes[hash];
+    return !(obj.title == obj.initial_title && obj.text == obj.initial_text);
+}
+
 function note_display(hash) {
     var html = "";
     author = notes[hash].author;
     if (!author || author == user_id) {
-        html += "<button id='button_edit_" + hash + "'>edit</button>";
+        html += "<button id='button_edit_" + hash + "'>edit</button>\n";
     }
-    if (notes[hash].text != notes[hash].initial) {
-        html += "<button id='button_save_" + hash + "'>save</button>";
+    if (note_is_modified(hash)) {
+        html += "<button id='button_save_" + hash + "'>save</button>\n";
     }
-    html += "<br />";
+    html += "<br />\n";
+    html += "<h1 id='h1_" + hash + "'>" + notes[hash].title + "</h1>\n"
     html += render(notes[hash].text);
     $("#" + notes[hash].div_id).html(html);
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, notes[hash].div_id]);
@@ -84,8 +90,10 @@ function note_display(hash) {
 }
 
 function note_reset(hash, data) {
+    notes[hash].title = data.title;
+    notes[hash].initial_title = data.title;
     notes[hash].text = data.text;
-    notes[hash].initial = data.text;
+    notes[hash].initial_text = data.text;
     notes[hash].author = data.author;
     note_display(hash);
 }
@@ -93,7 +101,7 @@ function note_reset(hash, data) {
 function note_init(hash, div_id) {
     $.ajax(note_url(hash), {
         method: "GET",
-        accepts: "appolication/json",
+        accepts: "application/json",
         error: ajax_error,
         data: {'json': 1},
         success: function(data) {
@@ -108,16 +116,19 @@ function note_init(hash, div_id) {
 
 function note_edit(hash) {
     var html = "";
-    html += "<button id='button_" + hash + "'>done</button>";
-    html += "<br />";
-    html += "<textarea id='edit_" + hash + "' cols='80' rows='10'>" + notes[hash].text + "</textarea>";
+    html += "<button id='button_" + hash + "'>done</button>\n";
+    html += "<br />\n";
+    html += "<input id='edit_title_" + hash + "' cols='80' placeholder='scrivi qui il titolo'>\n";
+    html += "<textarea id='edit_" + hash + "' cols='80' rows='10'>" + notes[hash].text + "</textarea>\n";
     $("#" + notes[hash].div_id).html(html);
+    $("#" + 'edit_title_' + hash).val(notes[hash].title);
     $("#button_" + hash).click(function() {note_change(hash);});
     $("#edit_" + hash).focus();
 }
 
 function note_change(hash) {
     notes[hash].text = $("#edit_" + hash).val();
+    notes[hash].title = $("#edit_title_" + hash).val();
     note_display(hash);
 }
 
@@ -126,6 +137,7 @@ function note_save(hash) {
         method: "POST",
         data: {
             hash: hash,
+            title: notes[hash].title,
             text: notes[hash].text
         },
         success: function(data) {

@@ -1,13 +1,15 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
     <form method="POST">{% csrf_token %}
     <input type="submit" name="new" value="create new">
     </form>
 <ul>
+{% trans "senza titolo" as no_title_message %}
 {% for obj in object_list %}
     <li>
-        <a href="{{ obj.get_absolute_url }}">{{ obj.created_on|date:"d.m.y" }}: {{ obj }}</a>
-        {% if obj.author %}(by {{ obj.author }}){% endif %}
+        <a href="{{ obj.get_absolute_url }}">{{ obj.created_on|date:"d.m.y" }}: {{ obj.title|default:no_title_message }}</a>
+        {% if obj.author %}(by {{ obj.author.first_name }} {{ obj.author.last_name|default:obj.author }}){% endif %}
     </li>
 {% endfor %}
 </ul>

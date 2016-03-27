@@ -52,7 +52,7 @@ class NoteView(MyContextMixin, TemplateResponseMixin, View):
         note = self.object
         try:
             if 'json' in request.GET:
-                return JsonResponse({'text': note.text, 'hash': note.hash, 'author': note.author and note.author.id})
+                return JsonResponse(note.as_dict())
         except KeyError:
             return HttpResponseBadRequest()
         context = self.get_context_data()
@@ -77,7 +77,8 @@ class NoteView(MyContextMixin, TemplateResponseMixin, View):
             if note.author and note.author != request.user:
                 return HttpResponseForbidden(_(u"solo l'autore può modificare la nota"))
             note.text = request.POST['text']
+            note.title = request.POST['title']
             note.save()
-            return JsonResponse({'text': note.text})
+            return JsonResponse(note.as_dict())
         except KeyError:
             return HttpResponseBadRequest()

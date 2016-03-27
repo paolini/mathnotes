@@ -20,6 +20,7 @@ class NoteManager(Manager):
 
 class Note(Model):
     hash = CharField(max_length=8)
+    title = CharField(max_length=160, default='senza titolo')
     text = TextField()
     created_on = DateTimeField(auto_now_add=True)
     modified_on = DateTimeField(auto_now=True)
@@ -47,5 +48,13 @@ class Note(Model):
         return super(Note, self).save(*args, **kwargs)
 
     def clone(self):
+        self.parent_id = self.id
         self.id = None
         self.hash = self.new_hash()
+
+    def as_dict(self):
+        return {
+            'title': self.title,
+            'text': self.text,
+            'hash': self.hash,
+            'author': self.author and self.author.id, }
