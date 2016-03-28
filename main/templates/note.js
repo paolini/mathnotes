@@ -1,6 +1,7 @@
 /**
  * Created by paolini on 13/03/16.
  */
+{% load i18n %}
 
 MathJax.Hub.Config({
     skipStartupTypeset: true,
@@ -72,21 +73,23 @@ function note_is_modified(hash) {
 
 function note_display(hash) {
     var html = "";
-    author = notes[hash].author;
+    var note = notes[hash];
+    author = note.author;
     if (!author || author == user_id) {
-        html += "<button id='button_edit_" + hash + "'>edit</button>\n";
+        html += "<button id='button_edit_" + hash + "'>{% trans "modifica" %}</button>\n";
     }
     if (note_is_modified(hash)) {
-        html += "<button id='button_save_" + hash + "'>save</button>\n";
+        html += "<button id='button_save_" + hash + "'>{% trans "salva" %}</button>\n";
     }
     html += "<br />\n";
-    html += "<h1 id='h1_" + hash + "'>" + notes[hash].title + "</h1>\n"
-    html += render(notes[hash].text);
-    $("#" + notes[hash].div_id).html(html);
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, notes[hash].div_id]);
+    html += "<h1 id='h1_" + hash + "'>" + note.title + "</h1>\n"
+    html += render(note.text);
+    $("#" + note.div_id).html(html);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, note.div_id]);
     $("#button_edit_" + hash).click(function() {note_edit(hash);});
     $("#button_save_" + hash).click(function() {note_save(hash);});
     $("#button_clone_" + hash).click(function() {note_clone(hash);});
+    $("head title").html(note.title);
 }
 
 function note_reset(hash, data) {
@@ -116,9 +119,9 @@ function note_init(hash, div_id) {
 
 function note_edit(hash) {
     var html = "";
-    html += "<button id='button_" + hash + "'>done</button>\n";
+    html += "<button id='button_" + hash + "'>{% trans "fatto" %}</button>\n";
     html += "<br />\n";
-    html += "<input id='edit_title_" + hash + "' cols='80' placeholder='scrivi qui il titolo'>\n";
+    html += "<input id='edit_title_" + hash + "' cols='80' placeholder='{% trans "scrivi qui il titolo" %}'>\n";
     html += "<textarea id='edit_" + hash + "' cols='80' rows='10'>" + notes[hash].text + "</textarea>\n";
     $("#" + notes[hash].div_id).html(html);
     $("#" + 'edit_title_' + hash).val(notes[hash].title);

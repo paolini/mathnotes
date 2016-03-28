@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block extra_head %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
@@ -10,18 +11,18 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "note_list" %}">back to list</a>
+    <a href="{% url "note_list" %}">{% trans "torna all'elenco" %}</a>
     <form id="form_{{ note.hash }}" method="POST">{% csrf_token %}
-        <input type="submit" name="clone" value="clone">
+        <input type="submit" name="clone" value="{% trans "duplica" %}">
     {% if not note.author or note.author == request.user %}
-        <input type="submit" name="delete" value="delete">
+        <input type="submit" name="delete" value="{% trans "elimina" %}">
     {% endif %}
     </form>
     <div id="div_{{ note.hash }}" class="note" hash="{{ note.hash }}">
     </div>
     <p>
     {% if note.author %}
-    author: {{ note.author }}
+    {% trans "autore" %}: {{ note.author }}
     {% endif %}
     </p>
 {% endblock %}
