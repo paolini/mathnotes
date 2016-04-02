@@ -51,11 +51,19 @@ var replace_bits = {
     "/": '&#x2F;'
 };
 
-notes = {}; // hash -> {div_id: ..., text: ..., initial: ...}
+var notes = {}; // hash -> {div_id: ..., text: ..., initial: ...}
+
+var enable_markdown = true;
 
 function render(str) {
-    str = String(str).replace(/[&<>"'\/]/g, function (s) {return replace_bits[s];});
-    return "<p>" + str + "</p>";
+    if (enable_markdown) {
+        return markdown.toHTML(str);
+    } else {
+        str = String(str).replace(/[&<>"'\/]/g, function (s) {
+            return replace_bits[s];
+        });
+        return "<p>" + str + "</p>";
+    }
 }
 
 function ajax_error(jqXHR, textStatus, errorThrown) {
