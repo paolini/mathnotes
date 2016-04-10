@@ -3,6 +3,6 @@ db.sqlite3
 config.ini
 *.pyc
 *~
-static
+/static
 
 

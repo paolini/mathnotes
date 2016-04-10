@@ -92,7 +92,8 @@ function note_display(hash) {
     html += "<br />\n";
     html += "<h1 id='h1_" + hash + "'>" + note.title + "</h1>\n"
     html += render(note.text);
-    $("#" + note.div_id).html(html);
+    $div = $("#" + note.div_id);
+    $div.html(html);
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, note.div_id]);
     $("#button_edit_" + hash).click(function() {note_edit(hash);});
     $("#button_save_" + hash).click(function() {note_save(hash);});
