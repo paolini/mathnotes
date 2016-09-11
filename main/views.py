@@ -18,6 +18,7 @@ class MyContextMixin(object):
 class NotesView(MyContextMixin, ListView):
     template_name = 'notes.html'
     model = Note
+    ordering = ("-modified_on", )
 
     def post(self, request, *args, **kwargs):
         if 'new' in request.POST:
