@@ -128,20 +128,21 @@ function note_init(hash, div_id) {
 
 function note_edit(hash) {
     var html = "";
-    html += "<button id='button_" + hash + "'>{% trans "fatto" %}</button>\n";
+    html += "<button id='button_change_" + hash + "'>{% trans "mostra" %}</button>\n";
+    html += "<button id='button_save_" + hash + "'>{% trans "salva" %}</button>\n";
     html += "<br />\n";
     html += "<input id='edit_title_" + hash + "' cols='80' placeholder='{% trans "scrivi qui il titolo" %}'>\n";
     html += "<textarea id='edit_" + hash + "' cols='80' rows='10'>" + notes[hash].text + "</textarea>\n";
     $("#" + notes[hash].div_id).html(html);
     $("#" + 'edit_title_' + hash).val(notes[hash].title);
-    $("#button_" + hash).click(function() {note_change(hash);});
+    $("#button_change_" + hash).click(function() {note_change(hash);note_display(hash);});
+    $("#button_save_" + hash).click(function() {note_change(hash);note_save(hash);note_display(hash);});
     $("#edit_" + hash).focus();
 }
 
 function note_change(hash) {
     notes[hash].text = $("#edit_" + hash).val();
     notes[hash].title = $("#edit_title_" + hash).val();
-    note_display(hash);
 }
 
 function note_save(hash) {
