@@ -12,6 +12,8 @@
     </script>
 {% endblock %}
 
+{% block title %}{{ note.title }}{% endblock %}
+
 {% block content %}
     <a href="{% url "note_list" %}">{% trans "torna all'elenco" %}</a>
     <form id="form_{{ note.hash }}" method="POST">{% csrf_token %}
