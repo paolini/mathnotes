@@ -35,7 +35,7 @@ class Note(Model):
             self.hash = self.new_hash()
 
     def __unicode__(self):
-        return '{:.40}'.format(self.text.replace('\n', ' '))
+        return '{:.40}'.format(self.title)
 
     def get_absolute_url(self):
         return '{}note/{}/'.format(settings.BASE_URL, self.hash)
