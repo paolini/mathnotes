@@ -5,12 +5,16 @@ import site
 from os.path import expanduser
 
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VIRTUALENV_PATH = os.path.join(expanduser('~'), '.virtualenvs', 'notes')
+sys.path.insert(0,PROJECT_PATH)
+
+from notes.config import config
+
+VIRTUALENV_PATH = config.get('config', 'virtualenv') or os.path.join(expanduser('~'), '.virtualenvs', 'notes')
+print "VIRTUALENV_PATH", VIRTUALENV_PATH
 
 # vedi http://thecodeship.com/deployment/deploy-django-apache-virtualenv-and-mod_wsgi/
 site.addsitedir(os.path.join(VIRTUALENV_PATH, 'local', 'lib', 'python2.7', 'site-packages'))
 
-sys.path.insert(0,PROJECT_PATH)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "notes.settings")
 
 activate_env = os.path.join(VIRTUALENV_PATH, 'bin', 'activate_this.py')

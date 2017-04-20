@@ -1,4 +1,4 @@
-import os
+import os, sys
 import getpass
 
 from ConfigParser import SafeConfigParser
@@ -35,6 +35,8 @@ config.set('config', 'static_url', '/static/')
 config.set('config', 'media_root', '%(base_dir)s/media')
 config.set('config', 'media_url', '/media/')
 config.set('config', 'virtualenv', '')
+config.set('config', 'user', '')
+config.set('config', 'group', '')
 
 # [database] section: database settings
 config.add_section('database')
@@ -53,6 +55,15 @@ config.set('apache', 'conf_filename', '')
 config.set('apache', 'port', '80')
 config.set('apache', 'server_admin', '')
 config.set('apache', 'wsgi_user', '')
+
+config.add_section('nginx')
+config.set('nginx', 'port', '80')
+
+config.add_section('uwsgi')
+config.set('uwsgi', 'port', '80')
+config.set('uwsgi', 'socket', '/tmp/mathnotes.sock')
+config.set('uwsgi', 'socket_chmod', '666')
+config.set('uwsgi', 'processes', '10')
 
 # [preferences] section: these settings can be choosen at will
 config.add_section('preferences')
@@ -79,8 +90,11 @@ CONFIG_FILENAMES = [x for x in [
     os.path.expanduser('~/.notes.ini'), ] if x]
 for CONFIG_FILENAME in CONFIG_FILENAMES:
     if os.path.exists(CONFIG_FILENAME):
-        print 'reading config file {}'.format(CONFIG_FILENAME)
+        print >> sys.stderr, 'reading config file {}'.format(CONFIG_FILENAME)
         config.read([CONFIG_FILENAME])
         break
 else:
     print "Warning: cannot find notes config file. Tried: " + ', '.join(CONFIG_FILENAMES)
+    print "Default configuration:"
+    import sys
+    config.write(sys.stdout)
