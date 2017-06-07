@@ -83,3 +83,34 @@ class NoteView(MyContextMixin, TemplateResponseMixin, View):
             return JsonResponse(note.as_dict())
         except KeyError:
             return HttpResponseBadRequest()
+
+class FacebookView(View):
+    def get(self, request, *args, **kwargs):
+        import facebook
+        token = '???' # get a token  https://developers.facebook.com/tools/explorer
+        if False:
+            # non funziona...
+            import requests
+            session = requests.Session()
+            response = session.request("v2.9/oauth/access_token", dict(
+                client_id=settings.CONFIG.get('social', 'facebook_key'),
+                client_secret=settings.CONFIG.get('social', 'facebook_secret'),
+                grant_type='client_credentials'))
+            print response
+        token = "7857a23e3a922aa54d369aa3cd4e7ceb"
+        graph = facebook.GraphAPI(token, version='2.7', session=session)
+        if False:
+            profile = graph.get_object("me")
+            friends = graph.get_connections("me", "friends")
+            friend_list = [friend for friend in friends['data']]
+        
+        if False:
+            group = graph.request("v2.9/search/",
+                                 dict(type='group',
+                                      q='perognix'))['data'][0]# search non ancora implementato
+            group_id = group['id']
+        else:
+            group_id = "37252797119"
+        feed = graph.get_connections(group_id, "feed")
+        
+        return JsonResponse(dict(data=feed['data'] ))

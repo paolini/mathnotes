@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from main.views import NotesView, NoteView
+from main.views import NotesView, NoteView, FacebookView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^css/main.css', TemplateView.as_view(template_name='main.css', content_type='text/css')),
     url(r'^$', NotesView.as_view(), name='note_list'),
     url(r'^note/(?P<hash>[a-zA-Z0-9_\-]{8})/', NoteView.as_view()),
+    url(r'^facebook', FacebookView.as_view()),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('^', include('django.contrib.auth.urls', namespace='auth')),
 ]
