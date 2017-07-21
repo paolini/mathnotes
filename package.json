@@ -1,0 +1,28 @@
+{
+  "name": "mathnotes",
+  "version": "0.0.1",
+  "description": "write notes and comments with math formulas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paolini/mathnotes.git"
+  },
+  "author": "Emanuele Paolini",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paolini/mathnotes/issues"
+  },
+  "homepage": "https://github.com/paolini/mathnotes#readme",
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongoose": "^4.11.3"
+  }
+}
