@@ -6,4 +6,4 @@ config.ini
 /static
 /backup
 /venv
-
+node_modules

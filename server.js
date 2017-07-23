@@ -10,9 +10,16 @@ mongoose.connect('mongodb://localhost/mathnotes');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+cons = require('consolidate')
+app.set('view engine', 'html');
+app.engine('html', cons.mustache);
 
 var routes = require('./api/routes/noteRoutes');
 routes(app);
+
+app.get('/', function (req, res) {
+  res.render('index.html');
+});
 
 app.listen(port);
 
