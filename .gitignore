@@ -1,9 +1,1 @@
-.idea
-db.sqlite3
-config.ini
-*.pyc
-*~
-/static
-/backup
-/venv
 node_modules

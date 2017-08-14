@@ -1,30 +1,35 @@
 {
   "name": "mathnotes",
   "version": "0.0.1",
-  "description": "write notes and comments with math formulas",
+  "description": "store and serve mathematical notes and discussion",
+  "author": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "test": "eslint src && preact test",
+    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
+    "build": "preact build",
+    "serve": "preact build && preact serve",
+    "dev": "preact watch"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/paolini/mathnotes.git"
   },
-  "author": "Emanuele Paolini",
+  "keywords": [],
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/paolini/mathnotes/issues"
+  "eslintConfig": {
+    "extends": "eslint-config-synacor"
   },
-  "homepage": "https://github.com/paolini/mathnotes#readme",
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "eslint": "^4.4.1",
+    "eslint-config-synacor": "^1.1.0",
+    "if-env": "^1.0.0",
+    "preact-cli": "^1.4.1"
   },
   "dependencies": {
-    "body-parser": "^1.17.2",
-    "consolidate": "^0.14.5",
-    "express": "^4.15.3",
-    "mongoose": "^4.11.3",
-    "mustache": "^2.3.0"
+    "codemirror": "^5.28.0",
+    "preact": "^8.2.1",
+    "preact-compat": "^3.17.0",
+    "preact-router": "^2.5.5"
   }
 }
