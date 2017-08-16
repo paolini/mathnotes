@@ -1,31 +1,36 @@
-import { h, Component } from 'preact';
-import { Router } from 'preact-router';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import { Layout } from './Layout';
+import { IndexPage } from './IndexPage';
+import { NotePage } from './NotePage';
+import { NotFoundPage } from './NotFoundPage';
+import notes from '../data/notes';
 
-import Header from './header';
-import Home from '../routes/home';
-import Profile from '../routes/profile';
-// import Home from 'async!./home';
-// import Profile from 'async!./profile';
+const renderIndex = () => <IndexPage/>;
 
-export default class App extends Component {
-	/** Gets fired when the route changes.
-	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
-	 *	@param {string} event.url	The newly routed URL
-	 */
-	handleRoute = e => {
-		this.currentUrl = e.url;
-	};
+const renderNote = ({ match, staticContext }) => {
+    const id = match.params.id;
+    let note = notes.find(note => note.id === id);
+    if (!note) {
+      note = notes[1];
+      // return <NotFoundPage staticContext={staticContext} />;
+    }
+    return <NotePage note={note} />;
+};
 
-	render() {
-		return (
-			<div id="app">
-				<Header />
-				<Router onChange={this.handleRoute}>
-					<Home path="/" />
-					<Profile path="/profile/" user="me" />
-					<Profile path="/profile/:user" />
-				</Router>
-			</div>
-		);
-	}
+const testing = () => {
+  return <NotePage note={notes[0]} />;
 }
+
+export const App = () => (
+  <Layout>
+    <Switch>
+      <Route exact path="/" render={renderIndex} />
+      <Route exact path="/pippo" render={testing} />
+      <Route exact path="/note/:id" render={renderNote} />
+      <Route component={NotFoundPage} />
+    </Switch>
+  </Layout>
+);
+
+export default App;

@@ -1,1 +1,8 @@
+# Dependency directories
 node_modules
+
+.babel_cache
+
+src/server-es5.js
+
+yarn.lock
