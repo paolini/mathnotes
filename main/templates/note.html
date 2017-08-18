@@ -23,6 +23,9 @@
     {% endif %}
     </form>
     <div id="div_{{ note.hash }}" class="note" hash="{{ note.hash }}">
+      <!-- prerendered code, for search engines -->
+      <h1>{{ note.title}}</h1>
+      {{ note.text|linebreaks }}
     </div>
     <p>
     {% if note.author %}
