@@ -7,3 +7,5 @@ config.ini
 /backup
 /venv
 node_modules
+notes-server/yarn.lock
+notes-server/lib

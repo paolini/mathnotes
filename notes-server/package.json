@@ -1,0 +1,23 @@
+{
+  "name": "notes-server",
+  "version": "0.0.1",
+  "description": "rest api for notes",
+  "main": "server.js",
+  "scripts": {
+    "start": "npm run build && node ./lib/server.js",
+    "build": "babel src -d lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emanuele Paolini",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.100.0",
+    "babel-cli": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "node-uuid": "^1.4.8"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-2": "^6.24.1"
+  }
+}
