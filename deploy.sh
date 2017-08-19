@@ -8,10 +8,14 @@ pushd "$( dirname "${BASH_SOURCE[0]}" )"
 
 DEPLOY_VIRTUALENV=$(awk -F "=" '/deploy_virtualenv/ {print $2}' config.ini)
 
-echo ==== activate virtualenv ${DEPLOY_VIRTUALENV}
-
-. ${DEPLOY_VIRTUALENV}/bin/activate
-
+if [ -z "$DEPLOY_VIRTUALENV" ] ; then
+    echo "==== no VIRTUALENV"
+    echo "==== You should set deploy_virtualenv in [deploy] section of config.ini"
+    exit
+else
+    echo ==== activate virtualenv ${DEPLOY_VIRTUALENV}
+    . ${DEPLOY_VIRTUALENV}/bin/activate
+fi
 echo ==== update source code
 git pull
 
