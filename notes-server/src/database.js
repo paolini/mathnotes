@@ -4,8 +4,37 @@ AWS.config.update({
   region: "eu-central-1"
 });
 
+const dynamodb = new AWS.DynamoDB();
+
+
+export function aws_getItems() {
+}
+
+function aws_prepare_params(data) {
+  const Item = {};
+  for (let [key, value] of Object.entries(data)) {
+    if (value === '') continue;
+    else if (typeof(value) === 'string') Item[key] = {'S': value};
+    else if (typeof(value) === 'boolean') Item[key] = {'BOOL': value};
+    else if (typeof(value) === 'number') Item[key] = {'N': value.toString()};
+    else {
+      throw 'unexpected key type ' + typeof(value);
+    }
+  }
+  return Item;
+}
+
+export function aws_batchWriteItems(items, table, done) {
+  const lst = [];
+  for (const item of items) {
+    lst.push({PutRequest: {Item: aws_prepare_params(item)}});
+  }
+  const r = {RequestItems: {[table]: lst}};
+  dynamodb.batchWriteItem(r, done);
+}
+
+/*
 export function aws_putItems(items, done) {
-  const dynamodb = new AWS.DynamoDB();
   let count = 0;
 
   function callback(err, data) {
@@ -27,3 +56,4 @@ export function aws_putItems(items, done) {
 
   callback();
 }
+*/

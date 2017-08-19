@@ -1,11 +1,8 @@
 import fs from 'fs';
-import {aws_putItems} from './database';
+import {aws_batchWriteItems} from './database';
 
 function import_json_data(filename, done) {
   const obj = JSON.parse(fs.readFileSync(filename, 'utf8'));
-  const notes = [];
-  const users = [];
-  const usersocialauth = [];
 
   function extract_item(item) {
     const o = {id: item.pk.toString()};
@@ -17,36 +14,30 @@ function import_json_data(filename, done) {
     return o;
   }
 
-  function prepare_params(data, table) {
-    const Item = {};
-    for (let [key, value] of Object.entries(data)) {
-      if (typeof(value) == 'string') Item[key] = {'S': value};
-      else if (typeof(value) == 'boolean') Item[key] = {'BOOL': value};
-      else if (typeof(value) == 'number') Item[key] = {'N': value.toString()};
-      else {
-        throw 'unexpected key type ' + typeof(value);
-      }
-    }
-    return {TableName: table, Item};
-  }
-
-  const item_queue = [];
+  const notes = [], users = [];
   for (const item of obj) {
     if (item.model === 'main.note') {
       const data = extract_item(item);
-      const params = prepare_params(data, 'notes');
-      item_queue.push(params);
+      notes.push(data);
     } else if (item.model === 'auth.user') {
       const data = extract_item(item);
       delete data.groups;
       delete data.user_permissions;
-      item_queue.push(prepare_params(data, 'users'));
+      users.push(data);
     } else if (item.model === 'default.usersocialauth') {
       const data = { ...extract_item(item)};
       data.extra_data = JSON.parse(data.extra_data);
     }
   }
-  aws_putItems(item_queue, done);
+  aws_batchWriteItems(users, 'users', (err, data1) => {
+    const data = {users: data1};
+    if (err) return done(err, data);
+    aws_batchWriteItems(notes, 'notes', (err, data2) => {
+      data.notes = data2;
+      return done(err, data);
+    });
+  })
+//  aws_putItems(item_queue, done);
 }
 
 const json_filename = process.argv[2];
