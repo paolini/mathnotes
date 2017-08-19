@@ -1,7 +1,7 @@
 import fs from 'fs';
 import {aws_batchWriteItems} from './database';
 
-function import_json_data(filename, done) {
+const import_json_data = filename => {
   const obj = JSON.parse(fs.readFileSync(filename, 'utf8'));
 
   function extract_item(item) {
@@ -29,22 +29,14 @@ function import_json_data(filename, done) {
       data.extra_data = JSON.parse(data.extra_data);
     }
   }
-  aws_batchWriteItems(users, 'users', (err, data1) => {
-    const data = {users: data1};
-    if (err) return done(err, data);
-    aws_batchWriteItems(notes, 'notes', (err, data2) => {
-      data.notes = data2;
-      return done(err, data);
-    });
-  })
-//  aws_putItems(item_queue, done);
-}
+  return Promise.all([
+    aws_batchWriteItems(users, 'users'),
+    aws_batchWriteItems(notes, 'notes')])
+    .then(([data1, data2]) => ({users: data1, notes: data2}));
+};
 
 const json_filename = process.argv[2];
 console.log("importing data from JSON file", json_filename);
-import_json_data(json_filename, (err, data) => {
-    if (err) {
-      console.log("ERROR!", err.stack);
-    }
-    console.log(data);
+import_json_data(json_filename).then(data => {
+    console.log("done: ", data);
   });
