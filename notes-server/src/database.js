@@ -10,6 +10,11 @@ AWS.config.update({
   region: "eu-central-1"
 });
 
+/*
+TODO: instead of using aws_encode_params and aws_decode_params
+one can simply use the dynamodb.docClient interface.
+*/
+
 function aws_encode_params(data) {
   const Item = {};
   for (let [key, value] of Object.entries(data)) {
@@ -40,6 +45,47 @@ function aws_decode_params(params) {
 }
 
 const dynamodb = new AWS.DynamoDB();
+var docClient = new AWS.DynamoDB.DocumentClient();
+
+export const aws_getItem = (table, key) => new Promise(
+  (resolve, reject) => {
+    const params = {
+        TableName: table,
+        Key: key
+    };
+    docClient.get(params, (err, data) => {
+      console.log("aws_getItem", data, err, params);
+      if (err) return reject(err);
+      resolve(data.Item);
+    });
+  });
+
+/* test aws_getItem */
+// aws_getItem("users", {"id": "2"}).then(data => {console.log("DATA", data)});
+
+export const aws_putItem = (table, item) => new Promise(
+  (resolve, reject) => {
+    const params = {
+        TableName: table,
+        Item: item };
+    console.log("putItem", params);
+    docClient.put(params, (err, data) => {
+      if (err) return reject(err);
+      resolve(data);
+      // apparently data turns out to be and empty object {}
+    });
+  });
+
+/* test aws_putItem */
+/*
+aws_putItem("users", { password: 'buh!',
+     last_name: 'Ginnasta',
+     first_name: 'Pippo',
+     id: '42' })
+     .then(
+       data => console.log("CREATED", data),
+       err => console.log("ERROR", err));
+*/
 
 export const aws_getItems = (table) => new Promise(
   (resolve, reject) =>
